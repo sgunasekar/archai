@@ -11,10 +11,10 @@ from torch.utils.data import DataLoader
 from archai.common import ml_utils
 from archai.common.apex_utils import ApexUtils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.utils.metrics import Metrics
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class Tester(EnforceOverrides):
@@ -30,8 +30,6 @@ class Tester(EnforceOverrides):
         self._metrics = None
 
     def test(self, test_dl: DataLoader)->Metrics:
-        logger.pushd(self._title)
-
         self._metrics = self._create_metrics()
 
         # recreate metrics for this run
@@ -39,7 +37,6 @@ class Tester(EnforceOverrides):
         self._test_epoch(test_dl)
         self._post_test()
 
-        logger.popd()
         return self.get_metrics() # type: ignore
 
     def _test_epoch(self, test_dl: DataLoader)->None:
@@ -51,8 +48,7 @@ class Tester(EnforceOverrides):
             for step, (x, y) in enumerate(test_dl):
                 # derived class might alter the mode through pre/post hooks
                 assert not self.model.training
-                logger.pushd(step)
-
+                
                 self._pre_step(x, y, self._metrics)     # pyright: ignore[reportGeneralTypeIssues]
 
                 # divide batch in to chunks if needed so it fits in GPU RAM
@@ -83,8 +79,7 @@ class Tester(EnforceOverrides):
 
                 # TODO: we possibly need to sync so all replicas are upto date
                 self._apex.sync_devices()
-
-                logger.popd()
+   
         self._metrics.post_epoch() # no "val" dataset for the test phase
 
     def get_metrics(self)->Optional[Metrics]:

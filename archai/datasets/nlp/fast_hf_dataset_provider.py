@@ -18,7 +18,7 @@ from overrides import overrides
 from transformers import AutoTokenizer, DataCollatorForLanguageModeling
 
 from archai.api.dataset_provider import DatasetProvider
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 from archai.datasets.nlp.fast_hf_dataset_provider_utils import (
     FastHfDataset,
     SHMArray,
@@ -28,7 +28,7 @@ from archai.datasets.nlp.fast_hf_dataset_provider_utils import (
 )
 from archai.datasets.nlp.hf_dataset_provider_utils import tokenize_concatenated_dataset
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 if sys.version_info.major == 3 and sys.version_info.minor >= 8:
     ALLOW_SHARED_MEMORY = True

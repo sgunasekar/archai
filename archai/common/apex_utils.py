@@ -17,10 +17,10 @@ from torch.optim.optimizer import Optimizer
 
 from archai.common import ml_utils, utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.utils.multi_optim import MultiOptim
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class ApexUtils:
@@ -180,7 +180,7 @@ class ApexUtils:
 
     def _log_info(self, d:dict)->None:
         if logger is not None:
-            logger.info(d, override_key=True)
+            logger.info(d)
 
     def sync_devices(self)->None:
         if self.is_dist():

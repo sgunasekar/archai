@@ -6,9 +6,9 @@ from typing import List, Optional
 
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 def load_from_onnx(onnx_model_path: str, providers: Optional[List[str]] = None) -> InferenceSession:

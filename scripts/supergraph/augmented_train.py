@@ -1,10 +1,10 @@
 import json
 
 from archai.common.common import common_init, expdir_abspath
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.utils.augmented_trainer import train_and_eval
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 if __name__ == "__main__":

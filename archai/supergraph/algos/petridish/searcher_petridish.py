@@ -11,7 +11,7 @@ from overrides import overrides
 from archai.common import common
 from archai.common.common import CommonState
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.algos.petridish.petridish_utils import (
     ConvexHullPoint,
     JobStage,
@@ -37,7 +37,7 @@ from archai.supergraph.nas.model_desc_builder import ModelDescBuilder
 from archai.supergraph.nas.search_combinations import SearchCombinations
 from archai.supergraph.nas.searcher import SearchResult
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class SearcherPetridish(SearchCombinations):
@@ -45,8 +45,6 @@ class SearcherPetridish(SearchCombinations):
     @overrides
     def search(self, conf_search:Config, model_desc_builder:ModelDescBuilder,
                  trainer_class:TArchTrainer, finalizers:Finalizers)->SearchResult:
-
-        logger.pushd('search')
 
         # region config vars
         self.conf_search = conf_search
@@ -131,8 +129,6 @@ class SearcherPetridish(SearchCombinations):
         search_result = SearchResult(best_point.model_desc, search_metrics=None,
                                      train_metrics=best_point.metrics)
         self.clean_log_result(conf_search, search_result)
-
-        logger.popd()
 
         return search_result
 

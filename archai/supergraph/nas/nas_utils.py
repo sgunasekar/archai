@@ -6,11 +6,11 @@ from typing import Optional
 import tensorwatch as tw
 
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.nas.model import Model
 from archai.supergraph.utils.checkpoint import CheckPoint
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 def checkpoint_empty(checkpoint:Optional[CheckPoint])->bool:

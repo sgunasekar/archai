@@ -13,9 +13,9 @@ from torch.utils.tensorboard.writer import SummaryWriter
 from archai.common import utils
 from archai.common.apex_utils import ApexUtils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class SummaryWriterDummy:
@@ -36,7 +36,7 @@ _atexit_reg = False # is hook for atexit registered?
 def get_conf(conf:Optional[Config]=None)->Config:
     if conf is not None:
         return conf
-    return Config.get_global_instance()
+    return Config.get_inst()
 
 def get_conf_common(conf:Optional[Config]=None)->Config:
     return get_conf(conf)['common']
@@ -103,7 +103,7 @@ def get_state()->CommonState:
 def init_from(state:CommonState)->None:
     global _tb_writer
 
-    Config.set_global_instance(state.conf)
+    Config.set_inst(state.conf)
 
     _tb_writer = state.tb_writer
 
@@ -140,7 +140,7 @@ def common_init(config_filepath: Optional[str]=None,
 
     # setup global instance
     conf = create_conf(config_filepath, param_args, use_args)
-    Config.set_global_instance(conf)
+    Config.set_inst(conf)
 
     # setup env vars which might be used in paths
     update_envvars(conf)

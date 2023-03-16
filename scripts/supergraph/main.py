@@ -5,7 +5,7 @@ import argparse
 from typing import Dict, Type
 
 from archai.common import utils
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.algos.darts.darts_exp_runner import DartsExperimentRunner
 from archai.supergraph.algos.didarts.didarts_exp_runner import DiDartsExperimentRunner
 from archai.supergraph.algos.divnas.divnas_exp_runner import DivnasExperimentRunner
@@ -20,7 +20,7 @@ from archai.supergraph.nas.exp_runner import ExperimentRunner
 
 
 def main():
-    logger = get_global_logger()
+    logger = get_logger(__name__)
 
     runner_types: Dict[str, Type[ExperimentRunner]] = {
         "darts": DartsExperimentRunner,

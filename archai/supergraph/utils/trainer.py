@@ -13,14 +13,14 @@ from torch.utils.data import DataLoader
 from archai.common import ml_utils
 from archai.common.apex_utils import ApexUtils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.datasets import data
 from archai.supergraph.utils.checkpoint import CheckPoint
 from archai.supergraph.utils.metrics import Metrics
 from archai.supergraph.utils.multi_optim import MultiOptim, OptimSched
 from archai.supergraph.utils.tester import Tester
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class Trainer(EnforceOverrides):
@@ -43,8 +43,6 @@ class Trainer(EnforceOverrides):
         self._validation_freq = 0 if conf_validation is None else conf_validation['freq']
         # endregion
 
-        logger.pushd(self._title + '__init__')
-
         self._apex = ApexUtils(conf_apex)
 
         self._checkpoint = checkpoint
@@ -63,11 +61,8 @@ class Trainer(EnforceOverrides):
 
         self._start_epoch = -1 # nothing is started yet
 
-        logger.popd()
 
     def fit(self, data_loaders:data.DataLoaders)->Metrics:
-        logger.pushd(self._title)
-
         assert data_loaders.train_dl is not None
 
         self._metrics = Metrics(self._title, self._apex, logger_freq=self._logger_freq)
@@ -109,21 +104,17 @@ class Trainer(EnforceOverrides):
             logger.warn(f'fit done because start_epoch {self._start_epoch}>={self._epochs}')
             return self.get_metrics() # we already finished the run, we might be checkpointed
 
-        logger.pushd('epochs')
-        for epoch in range(self._start_epoch, self._epochs):
-            logger.pushd(epoch)
+        for epoch in range(self._start_epoch, self._epochs): 
             self._set_epoch(epoch, data_loaders)
             self.pre_epoch(data_loaders)
             self._train_epoch(data_loaders.train_dl)
             self.post_epoch(data_loaders)
-            logger.popd()
-        logger.popd()
+            
         self.post_fit(data_loaders)
 
         # make sure we don't keep references to the graph
         del self._multi_optim
 
-        logger.popd()
         return self.get_metrics()
 
     def create_multi_optim(self, train_len:int)->MultiOptim:
@@ -259,9 +250,7 @@ class Trainer(EnforceOverrides):
         steps = len(train_dl)
         self.model.train()
 
-        logger.pushd('steps')
         for step, (x, y) in enumerate(train_dl):
-            logger.pushd(step)
             assert self.model.training # derived class might alter the mode
 
             # TODO: please check that no algorithm is invalidated by swapping prestep with zero grad
@@ -310,12 +299,10 @@ class Trainer(EnforceOverrides):
                            ml_utils.join_chunks(logits_chunks),
                            torch.tensor(loss_sum/loss_count),
                            steps)
-            logger.popd()
 
             # end of step
 
         self._multi_optim.epoch()
-        logger.popd()
 
     def compute_loss(self, lossfn:Callable, y:Tensor, logits:Tensor,
                      aux_weight:float, aux_logits:Optional[Tensor])->Tensor:

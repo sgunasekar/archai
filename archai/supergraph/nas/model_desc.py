@@ -17,9 +17,9 @@ import yaml
 
 from archai.common import utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 # Each tensor shape is list

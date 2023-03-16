@@ -11,7 +11,7 @@ import tensorwatch as tw
 import torch
 from overrides.overrides import overrides
 
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 from archai.discrete_search.api.archai_model import ArchaiModel
 from archai.discrete_search.api.search_space import EvolutionarySearchSpace
 from archai.discrete_search.search_spaces.cv.segmentation_dag.model import (
@@ -19,7 +19,7 @@ from archai.discrete_search.search_spaces.cv.segmentation_dag.model import (
     SegmentationDagModel,
 )
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 class SegmentationDagSearchSpace(EvolutionarySearchSpace):

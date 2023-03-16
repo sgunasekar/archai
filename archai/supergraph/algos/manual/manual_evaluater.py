@@ -9,12 +9,12 @@ from torch import nn
 
 from archai.common import ml_utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.nas.evaluater import Evaluater
 from archai.supergraph.nas.model import Model
 from archai.supergraph.nas.model_desc_builder import ModelDescBuilder
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class ManualEvaluater(Evaluater):

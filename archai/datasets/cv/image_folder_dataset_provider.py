@@ -9,9 +9,9 @@ from torchvision.datasets import ImageFolder
 from torchvision.transforms import ToTensor
 
 from archai.api.dataset_provider import DatasetProvider
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 class ImageFolderDatasetProvider(DatasetProvider):

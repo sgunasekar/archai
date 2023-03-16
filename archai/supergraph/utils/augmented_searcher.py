@@ -17,7 +17,7 @@ from tqdm import tqdm
 
 from archai.common.common import expdir_abspath
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.common.stopwatch import StopWatch
 from archai.supergraph.datasets.augmentation import (
     augment_list,
@@ -29,7 +29,7 @@ from archai.supergraph.models import get_model, num_class
 from archai.supergraph.utils.augmented_trainer import train_and_eval
 from archai.supergraph.utils.metrics import Accumulator
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 # this method is overriden version of ray.tune.trial_runner.TrialRunner.step using monkey patching

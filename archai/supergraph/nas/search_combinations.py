@@ -10,7 +10,7 @@ from overrides import overrides
 
 from archai.common import utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.nas import nas_utils
 from archai.supergraph.nas.arch_trainer import TArchTrainer
 from archai.supergraph.nas.finalizers import Finalizers
@@ -18,7 +18,7 @@ from archai.supergraph.nas.model_desc_builder import ModelDescBuilder
 from archai.supergraph.nas.searcher import ModelMetrics, Searcher, SearchResult
 from archai.supergraph.utils.metrics import Metrics
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class SearchCombinations(Searcher):
@@ -43,7 +43,6 @@ class SearchCombinations(Searcher):
 
         for macro_comb_i in range(start_macro_i, len(macro_combinations)):
             reductions, cells, nodes = macro_combinations[macro_comb_i]
-            logger.pushd(f'r{reductions}.c{cells}.n{nodes}')
 
             # build model description that we will search on
             model_desc = self.build_model_desc(model_desc_builder, conf_model_desc,
@@ -72,7 +71,6 @@ class SearchCombinations(Searcher):
             # checkpoint
             assert best_search_result is not None
             self.record_checkpoint(macro_comb_i, best_search_result)
-            logger.popd() # reductions, cells, nodes
 
         assert best_search_result is not None
         self.clean_log_result(conf_search, best_search_result)

@@ -6,13 +6,13 @@ from typing import Optional
 from overrides import overrides
 
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.nas.arch_trainer import ArchTrainer
 from archai.supergraph.nas.model import Model
 from archai.supergraph.utils.checkpoint import CheckPoint
 from archai.supergraph.utils.multi_optim import MultiOptim, OptimSched
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class DidartsArchTrainer(ArchTrainer):

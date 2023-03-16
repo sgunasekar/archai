@@ -15,11 +15,11 @@ import yaml
 from tensorwatch import ModelStats
 
 from archai.common import utils
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.nas.model_desc import ModelDesc
 from archai.supergraph.utils.metrics import Metrics
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class JobStage(Enum):

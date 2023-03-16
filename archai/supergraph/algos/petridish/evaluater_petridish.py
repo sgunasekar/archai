@@ -15,7 +15,7 @@ from overrides import overrides
 
 from archai.common import common, ml_utils, utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.algos.petridish.petridish_utils import (
     ConvexHullPoint,
     ExperimentStage,
@@ -28,7 +28,7 @@ from archai.supergraph.nas.evaluater import EvalResult, Evaluater
 from archai.supergraph.nas.model_desc import CellType, ModelDesc
 from archai.supergraph.nas.model_desc_builder import ModelDescBuilder
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 def filepath_ext(filepath:str)->str:
@@ -52,8 +52,6 @@ class EvaluaterPetridish(Evaluater):
     def evaluate(self, conf_eval:Config, model_desc_builder:ModelDescBuilder)->EvalResult:
         """Takes a folder of model descriptions output by search process and
         trains them in a distributed manner using ray with 1 gpu"""
-
-        logger.pushd('evaluate')
 
         final_desc_foldername:str = conf_eval['final_desc_foldername']
         source_desc_foldername:str = conf_eval.get('source_desc_foldername', final_desc_foldername)
@@ -85,9 +83,7 @@ class EvaluaterPetridish(Evaluater):
 
         best_point = max(hull_points, key=lambda p:p.metrics.best_val_top1())
         logger.info({'best_val_top1':best_point.metrics.best_val_top1(),
-                     'best_MAdd': best_point.model_stats.MAdd})
-
-        logger.popd()
+                     'best_MAdd': best_point.model_stats.MAdd}) 
 
         return EvalResult(best_point.metrics)
 

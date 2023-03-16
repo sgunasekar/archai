@@ -10,12 +10,12 @@ from tqdm import tqdm
 
 from archai.common import ml_utils, utils
 from archai.common.common import get_tb_writer
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.datasets.data import get_dataloaders
 from archai.supergraph.models import get_model, num_class
 from archai.supergraph.utils.metrics import Accumulator
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 # TODO: remove scheduler parameter?

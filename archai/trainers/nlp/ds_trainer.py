@@ -17,10 +17,10 @@ from torch.utils.data import DataLoader, Dataset, Sampler
 from torch.utils.data.distributed import DistributedSampler
 
 from archai.api.trainer_base import TrainerBase
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 from archai.trainers.nlp.ds_training_args import DsTrainingArguments
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 def _create_deepspeed_config() -> Dict[str, Any]:

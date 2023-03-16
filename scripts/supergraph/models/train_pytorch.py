@@ -16,10 +16,10 @@ from torch.optim.optimizer import Optimizer
 from torch.utils.data import DataLoader
 
 from archai.common import utils
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph import models
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 def train(

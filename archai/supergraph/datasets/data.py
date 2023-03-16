@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, Dataset, Sampler
 
 from archai.common import apex_utils, utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.datasets.distributed_stratified_sampler import DistributedStratifiedSampler
 from archai.supergraph.datasets.augmentation import add_named_augs
 from archai.supergraph.datasets.dataset_provider import (
@@ -16,7 +16,7 @@ from archai.supergraph.datasets.dataset_provider import (
 )
 from archai.supergraph.datasets.limit_dataset import DatasetLike
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class DataLoaders:
@@ -28,8 +28,6 @@ class DataLoaders:
         self.test_dl = test_dl
 
 def get_data(conf_loader:Config)->DataLoaders:
-    logger.pushd('data')
-
     # region conf vars
     # dataset
     conf_dataset = conf_loader['dataset']
@@ -61,8 +59,6 @@ def get_data(conf_loader:Config)->DataLoaders:
         test_workers=test_workers, max_batches=max_batches, apex=apex)
 
     assert train_dl is not None
-
-    logger.popd()
 
     return DataLoaders(train_dl=train_dl, val_dl=val_dl, test_dl=test_dl)
 

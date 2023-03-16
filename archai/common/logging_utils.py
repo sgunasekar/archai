@@ -6,9 +6,9 @@ import os
 import sys
 from logging import Filter, Formatter, Logger, LogRecord, StreamHandler
 from logging.handlers import TimedRotatingFileHandler
+from typing import Optional
 
 FORMATTER = Formatter("%(asctime)s - %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "archai.log"
 LOCAL_RANK = int(os.environ.get("LOCAL_RANK", 0))
 
 
@@ -61,7 +61,7 @@ def get_console_handler() -> StreamHandler:
     return console_handler
 
 
-def get_timed_file_handler() -> TimedRotatingFileHandler:
+def get_timed_file_handler(file_path: Optional[str] = None) -> TimedRotatingFileHandler:
     """Get a `TimedRotatingFileHandler` for logging to timestamped files.
 
     Returns:
@@ -69,13 +69,16 @@ def get_timed_file_handler() -> TimedRotatingFileHandler:
 
     """
 
-    file_handler = TimedRotatingFileHandler(LOG_FILE, delay=True, when="midnight", encoding="utf-8")
+    if file_path is None:
+        file_path = "archai.log"
+
+    file_handler = TimedRotatingFileHandler(file_path, delay=True, when="midnight", encoding="utf-8")
     file_handler.setFormatter(FORMATTER)
 
     return file_handler
 
 
-def get_logger(logger_name: str) -> Logger:
+def get_logger(logger_name: str, file_path: Optional[str] = None) -> Logger:
     """Get a logger with the specified name and default settings.
 
     Args:
@@ -90,7 +93,7 @@ def get_logger(logger_name: str) -> Logger:
     logger.setLevel(logging.DEBUG)
 
     logger.addHandler(get_console_handler())
-    logger.addHandler(get_timed_file_handler())
+    logger.addHandler(get_timed_file_handler(file_path=file_path))
 
     logger.addFilter(RankFilter(LOCAL_RANK))
 

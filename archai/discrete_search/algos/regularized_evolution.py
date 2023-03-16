@@ -9,7 +9,7 @@ from overrides import overrides
 from tqdm import tqdm
 
 from archai.api.dataset_provider import DatasetProvider
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 from archai.discrete_search.api.archai_model import ArchaiModel
 from archai.discrete_search.api.search_objectives import SearchObjectives
 from archai.discrete_search.api.search_results import SearchResults
@@ -17,7 +17,7 @@ from archai.discrete_search.api.search_space import EvolutionarySearchSpace
 from archai.discrete_search.api.searcher import Searcher
 from archai.discrete_search.utils.multi_objective import get_pareto_frontier
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 class RegularizedEvolutionSearch(Searcher):

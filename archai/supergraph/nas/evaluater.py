@@ -8,7 +8,7 @@ from torch import nn
 
 from archai.common import ml_utils, utils
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.datasets import data
 from archai.supergraph.nas import nas_utils
 from archai.supergraph.nas.model import Model
@@ -18,7 +18,7 @@ from archai.supergraph.utils.checkpoint import CheckPoint
 from archai.supergraph.utils.metrics import Metrics
 from archai.supergraph.utils.trainer import Trainer
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class EvalResult:
@@ -27,8 +27,6 @@ class EvalResult:
 
 class Evaluater(EnforceOverrides):
     def evaluate(self, conf_eval:Config, model_desc_builder:ModelDescBuilder)->EvalResult:
-        logger.pushd('eval_arch')
-
         # region conf vars
         conf_checkpoint = conf_eval['checkpoint']
         resume = conf_eval['resume']
@@ -49,8 +47,6 @@ class Evaluater(EnforceOverrides):
             ml_utils.save_model(model, model_filename)
 
         logger.info({'model_save_path': model_filename})
-
-        logger.popd()
 
         return EvalResult(train_metrics)
 

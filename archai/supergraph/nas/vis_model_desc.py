@@ -5,11 +5,11 @@ from typing import Optional, Tuple
 
 from graphviz import Digraph
 
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.common.utils import first_or_default
 from archai.supergraph.nas.model_desc import CellDesc, CellType, ModelDesc
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 def draw_model_desc(model_desc:ModelDesc, filepath:str=None, caption:str=None)\

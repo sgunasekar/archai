@@ -8,7 +8,7 @@ from overrides import overrides
 from torch import nn
 
 from archai.common.common import get_conf
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.algos.divnas.analyse_activations import compute_brute_force_sol
 from archai.supergraph.algos.divnas.divnas_cell import Divnas_Cell
 from archai.supergraph.algos.divnas.divop import DivOp
@@ -18,16 +18,13 @@ from archai.supergraph.nas.finalizers import Finalizers
 from archai.supergraph.nas.model import Model
 from archai.supergraph.nas.model_desc import CellDesc, EdgeDesc, ModelDesc, NodeDesc
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class DivnasFinalizers(Finalizers):
 
     @overrides
     def finalize_model(self, model: Model, to_cpu=True, restore_device=True) -> ModelDesc:
-
-        logger.pushd('finalize')
-
         # get config and train data loader
         # TODO: confirm this is correct in case you get silent bugs
         conf = get_conf()
@@ -62,8 +59,6 @@ class DivnasFinalizers(Finalizers):
                     # node covariances in every cell
                     for dcell in self._divnas_cells.values():
                         dcell.update_covs()
-
-        logger.popd()
 
         return super().finalize_model(model, to_cpu, restore_device)
 

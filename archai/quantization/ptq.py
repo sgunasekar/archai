@@ -14,10 +14,10 @@ from onnxruntime.quantization.quantize import quantize_dynamic
 from onnxruntime.quantization.registry import IntegerOpsRegistry
 
 from archai.common.file_utils import create_file_name_identifier
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 from archai.quantization.quantization_utils import rgetattr, rsetattr
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 class GemmQuant(QuantOperatorBase):

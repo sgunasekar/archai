@@ -8,10 +8,10 @@ import torch
 import torchvision
 from torchvision.datasets.utils import check_integrity
 
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.common.utils import download_and_extract_tar, extract_tar
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 _ARCHIVE_DICT = {
     'train': {
         'url': 'https://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_train.tar',

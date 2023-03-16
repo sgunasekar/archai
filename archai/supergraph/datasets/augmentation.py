@@ -14,7 +14,7 @@ import PIL.ImageDraw
 import PIL.ImageEnhance
 import PIL.ImageOps
 
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.datasets.cv.transforms.custom_cutout import CustomCutout
 from archai.supergraph.datasets.aug_policies import (
     fa_reduced_cifar10,
@@ -22,7 +22,7 @@ from archai.supergraph.datasets.aug_policies import (
     fa_resnet50_rimagenet,
 )
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 _random_mirror = True
 
 

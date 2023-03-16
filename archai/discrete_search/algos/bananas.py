@@ -8,7 +8,7 @@ import numpy as np
 from overrides import overrides
 
 from archai.api.dataset_provider import DatasetProvider
-from archai.common.ordered_dict_logger import OrderedDictLogger
+from archai.common.logging_utils import get_logger
 from archai.discrete_search.api.archai_model import ArchaiModel
 from archai.discrete_search.api.predictor import MeanVar, Predictor
 from archai.discrete_search.api.search_objectives import SearchObjectives
@@ -21,7 +21,7 @@ from archai.discrete_search.api.searcher import Searcher
 from archai.discrete_search.predictors.dnn_ensemble import PredictiveDNNEnsemble
 from archai.discrete_search.utils.multi_objective import get_non_dominated_sorting
 
-logger = OrderedDictLogger(source=__name__)
+logger = get_logger(__name__)
 
 
 class MoBananasSearch(Searcher):

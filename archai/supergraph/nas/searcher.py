@@ -7,7 +7,7 @@ from typing import Dict, Optional, Tuple
 from overrides import EnforceOverrides
 
 from archai.common.config import Config
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 from archai.supergraph.datasets import data
 from archai.supergraph.nas.arch_trainer import TArchTrainer
 from archai.supergraph.nas.finalizers import Finalizers
@@ -17,7 +17,7 @@ from archai.supergraph.nas.model_desc_builder import ModelDescBuilder
 from archai.supergraph.utils.metrics import Metrics
 from archai.supergraph.utils.trainer import Trainer
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class ModelMetrics:
@@ -122,8 +122,6 @@ class Searcher(EnforceOverrides):
         if trainer_class is None:
             return model_desc, None
 
-        logger.pushd('arch_search')
-
         conf_trainer = conf_search['trainer']
         conf_loader = conf_search['loader']
 
@@ -138,8 +136,6 @@ class Searcher(EnforceOverrides):
 
         # finalize
         found_desc = self.finalize_model(model, finalizers)
-
-        logger.popd()
 
         return found_desc, search_metrics
 
@@ -159,16 +155,12 @@ class Searcher(EnforceOverrides):
         if  epochs <= 0:
             return None
 
-        logger.pushd(trainer_title)
-
         model = Model(model_desc, droppath=drop_path_prob>0.0, affine=True)
 
         # get data
         data_loaders= self.get_data(conf_loader)
 
         trainer = Trainer(conf_trainer, model, checkpoint=None)
-        train_metrics = trainer.fit(data_loaders)
-
-        logger.popd()
+        train_metrics = trainer.fit(data_loaders)  
 
         return ModelMetrics(model, train_metrics)

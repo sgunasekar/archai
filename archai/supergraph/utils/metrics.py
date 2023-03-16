@@ -15,9 +15,9 @@ from torch import Tensor
 from archai.common import ml_utils, utils
 from archai.common.apex_utils import ApexUtils
 from archai.common.common import get_tb_writer
-from archai.common.ordered_dict_logger import get_global_logger
+from archai.common.logging_utils import get_logger
 
-logger = get_global_logger()
+logger = get_logger(__name__)
 
 
 class Metrics:
@@ -62,39 +62,35 @@ class Metrics:
 
         # logging
         if self.logger_freq > 0:
-            with logger.pushd('timings'):
-                logger.info({'epoch':self.run_metrics.epoch_time_avg(),
-                            'step': self.run_metrics.step_time_avg(),
-                            'run': self.run_metrics.duration()})
-                if self.is_dist():
-                    logger.info({'dist_epoch_sum': self.reduce_sum(self.run_metrics.epoch_time_avg()),
-                                'dist_step': self.reduce_mean(self.run_metrics.step_time_avg()),
-                                'dist_run_sum': self.reduce_sum(self.run_metrics.duration())})
+            logger.info({'epoch':self.run_metrics.epoch_time_avg(),
+                        'step': self.run_metrics.step_time_avg(),
+                        'run': self.run_metrics.duration()})
+            if self.is_dist():
+                logger.info({'dist_epoch_sum': self.reduce_sum(self.run_metrics.epoch_time_avg()),
+                            'dist_step': self.reduce_mean(self.run_metrics.step_time_avg()),
+                            'dist_run_sum': self.reduce_sum(self.run_metrics.duration())})
 
 
             best_train, best_val, best_test = self.run_metrics.best_epoch()
-            with logger.pushd('best_train'):
-                logger.info({'epoch': best_train.index,
-                            'top1': best_train.top1.avg})
-                if self.is_dist():
-                    logger.info({'dist_epoch': self.reduce_mean(best_train.index),
-                                'dist_top1': self.reduce_mean(best_train.top1.avg)})
+            logger.info({'epoch': best_train.index,
+                        'top1': best_train.top1.avg})
+            if self.is_dist():
+                logger.info({'dist_epoch': self.reduce_mean(best_train.index),
+                            'dist_top1': self.reduce_mean(best_train.top1.avg)})
 
             if best_val:
-                with logger.pushd('best_val'):
-                    logger.info({'epoch': best_val.index,
-                                'top1': best_val.top1.avg})
-                    if self.is_dist():
-                        logger.info({'dist_epoch': self.reduce_mean(best_val.index),
-                                    'dist_top1': self.reduce_mean(best_val.top1.avg)})
+                logger.info({'epoch': best_val.index,
+                            'top1': best_val.top1.avg})
+                if self.is_dist():
+                    logger.info({'dist_epoch': self.reduce_mean(best_val.index),
+                                'dist_top1': self.reduce_mean(best_val.top1.avg)})
 
             if best_test:
-                with logger.pushd('best_test'):
-                    logger.info({'epoch': best_test.index,
-                                'top1': best_test.top1.avg})
-                    if self.is_dist():
-                        logger.info({'dist_epoch': self.reduce_mean(best_test.index),
-                                    'dist_top1': self.reduce_mean(best_test.top1.avg)})
+                logger.info({'epoch': best_test.index,
+                            'top1': best_test.top1.avg})
+                if self.is_dist():
+                    logger.info({'dist_epoch': self.reduce_mean(best_test.index),
+                                'dist_top1': self.reduce_mean(best_test.top1.avg)})
 
     def pre_step(self, x: Tensor, y: Tensor):
         self.run_metrics.cur_epoch().pre_step()
@@ -155,31 +151,29 @@ class Metrics:
             val_epoch_metrics = val_metrics.run_metrics.epochs_metrics[-1]
 
         if self.logger_freq > 0:
-            with logger.pushd('train'):
-                logger.info({'top1': epoch.top1.avg,
-                            'top5': epoch.top5.avg,
-                            'loss': epoch.loss.avg,
-                            'duration': epoch.duration(),
-                            'step_time': epoch.step_time.avg,
-                            'end_lr': lr})
-                if self.is_dist():
-                    logger.info({'dist_top1': self.reduce_mean(epoch.top1.avg),
-                                'dist_top5': self.reduce_mean(epoch.top5.avg),
-                                'dist_loss': self.reduce_mean(epoch.loss.avg),
-                                'dist_duration': self.reduce_mean(epoch.duration()),
-                                'dist_step_time': self.reduce_mean(epoch.step_time.avg),
-                                'dist_end_lr': self.reduce_mean(lr)})
+            logger.info({'top1': epoch.top1.avg,
+                        'top5': epoch.top5.avg,
+                        'loss': epoch.loss.avg,
+                        'duration': epoch.duration(),
+                        'step_time': epoch.step_time.avg,
+                        'end_lr': lr})
+            if self.is_dist():
+                logger.info({'dist_top1': self.reduce_mean(epoch.top1.avg),
+                            'dist_top5': self.reduce_mean(epoch.top5.avg),
+                            'dist_loss': self.reduce_mean(epoch.loss.avg),
+                            'dist_duration': self.reduce_mean(epoch.duration()),
+                            'dist_step_time': self.reduce_mean(epoch.step_time.avg),
+                            'dist_end_lr': self.reduce_mean(lr)})
             if val_epoch_metrics:
-                with logger.pushd('val'):
-                    logger.info({'top1': val_epoch_metrics.top1.avg,
-                                'top5': val_epoch_metrics.top5.avg,
-                                'loss': val_epoch_metrics.loss.avg,
-                                'duration': val_epoch_metrics.duration()})
-                    if self.is_dist():
-                        logger.info({'dist_top1': self.reduce_mean(val_epoch_metrics.top1.avg),
-                                    'dist_top5': self.reduce_mean(val_epoch_metrics.top5.avg),
-                                    'dist_loss': self.reduce_mean(val_epoch_metrics.loss.avg),
-                                    'dist_duration': self.reduce_mean(val_epoch_metrics.duration())})
+                logger.info({'top1': val_epoch_metrics.top1.avg,
+                            'top5': val_epoch_metrics.top5.avg,
+                            'loss': val_epoch_metrics.loss.avg,
+                            'duration': val_epoch_metrics.duration()})
+                if self.is_dist():
+                    logger.info({'dist_top1': self.reduce_mean(val_epoch_metrics.top1.avg),
+                                'dist_top5': self.reduce_mean(val_epoch_metrics.top5.avg),
+                                'dist_loss': self.reduce_mean(val_epoch_metrics.loss.avg),
+                                'dist_duration': self.reduce_mean(val_epoch_metrics.duration())})
 
         # writer = get_tb_writer()
         # writer.add_scalar(f'{self._tb_path}/train_epochs/loss',
