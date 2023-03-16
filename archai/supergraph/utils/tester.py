@@ -44,7 +44,7 @@ class Tester(EnforceOverrides):
         self.model.eval()
         steps = len(test_dl)
 
-        with torch.no_grad(), logger.pushd('steps'):
+        with torch.no_grad():
             for step, (x, y) in enumerate(test_dl):
                 # derived class might alter the mode through pre/post hooks
                 assert not self.model.training

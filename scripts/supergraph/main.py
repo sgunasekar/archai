@@ -20,8 +20,6 @@ from archai.supergraph.nas.exp_runner import ExperimentRunner
 
 
 def main():
-    logger = get_logger(__name__)
-
     runner_types: Dict[str, Type[ExperimentRunner]] = {
         "darts": DartsExperimentRunner,
         "petridish": PetridishExperimentRunner,
@@ -89,8 +87,6 @@ def main():
             )
 
             runner.run(search=not args.no_search, eval=not args.no_eval)
-
-    logger.close()
 
 
 if __name__ == "__main__":

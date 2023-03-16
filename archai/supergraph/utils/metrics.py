@@ -51,7 +51,7 @@ class Metrics:
     def _reset_run(self)->None:
         self.run_metrics = RunMetrics()
         self.global_step = -1
-        self._tb_path = logger.current_path
+        # self._tb_path = logger.current_path
 
     def pre_run(self)->None:
         self._reset_run()
@@ -139,7 +139,7 @@ class Metrics:
             if writer is not None:
                 if self.logger_freq > 0 and not math.isnan(lr):
                     logger.debug({'start_lr': lr})
-                writer.add_scalar(f'{self._tb_path}/train_steps/lr',
+                writer.add_scalar(f'train_steps/lr',
                                     lr, self.global_step)
 
     def post_epoch(self, lr:float=math.nan, val_metrics:Optional['Metrics']=None):
